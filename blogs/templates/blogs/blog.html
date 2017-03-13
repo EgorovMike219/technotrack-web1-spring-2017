@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block title %} {{ object.title }} {% endblock %}
+
+{% block content %}
+    <a href="{% url "blogs:blog_list"  %}">Blogs</a><br/>
+    <div>Описание блога: {{ object.description }}. Автор: {{ object.author }}</div>
+    <div><a href="{% url "post_list" blog_id=object.id %}">Список постов</a></div>
+{% endblock %}

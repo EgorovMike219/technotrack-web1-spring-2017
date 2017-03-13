@@ -1,0 +1,4 @@
+{% for value in values %}
+    {% if value == "blabla" %}BLABLA <br/>{% endif %}
+    <i>{{ forloop.counter }}</i><b>{{ value|slice:":5" }}</b><br/>
+{% endfor %}

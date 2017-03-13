@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    Главная страница сайта
+{% endblock %}
+
+{% block content %}
+    <div style="color: greenyellow; background-color: cornflowerblue">
+        <div><h1>Приветствую тебя на главной странице сайта </h1></div>
+        <div>Количество пользователей на сайте: {{ users.count }}</div>
+        <div>Количество блогов на сайте: {{ blogs.count }}</div>
+        <div>Количество постов на сайте: {{ posts.count }}</div>
+        <div>Количество комментариев на сайте: {{ comments.count }}</div>
+        <div>Если хочешь посмотреть интерестные блоги, то  <a href="{% url "blogs:blog_list"  %}">ТЫЧЬ ПО ССЫЛКЕ</a></div>
+    </div>
+{% endblock %}

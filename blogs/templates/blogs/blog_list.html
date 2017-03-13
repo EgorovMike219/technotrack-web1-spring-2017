@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+
+{% block title %}Список блогов{% endblock %}
+
+{% block content %}
+    {% for blog in object_list %}
+        <b>{{ blog.id }}. </b><a href="{% url "blog" pk=blog.id %}">{{ blog.title }}</a><br/>
+    {% endfor %}
+{% endblock %}

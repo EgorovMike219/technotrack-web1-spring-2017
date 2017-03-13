@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block title %} {{ object.title }} {% endblock %}
+
+{% block content %}
+    <div>Описание поста:</div>
+    <div>{{ object.description }}</div>
+    <div>Автор: {{ object.author }}</div>
+    {% if object.comment_set.all %}
+        <div>Комментарии:</div>
+    {% endif %}
+    {% for comment in object.comment_set.all %}
+        <b>{{ comment.id }}. {{ comment.description }} </b> <br/>
+    {% endfor %}
+{% endblock %}
