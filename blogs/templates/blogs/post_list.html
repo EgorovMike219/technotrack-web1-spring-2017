@@ -4,6 +4,6 @@
 
 {% block content %}
     {% for post in object_list %}
-        <b>{{ post.id }}. </b><a href="{% url "post" pk=post.id %}">{{ post.title }}</a><br/>
+        <b>{{ post.id }}. </b><a href="{% url "blogs:post" pk=post.id %}">{{ post.title }}</a><br/>
     {% endfor %}
 {% endblock %}

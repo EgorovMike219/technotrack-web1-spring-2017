@@ -5,5 +5,5 @@
 {% block content %}
     <a href="{% url "blogs:blog_list"  %}">Blogs</a><br/>
     <div>Описание блога: {{ object.description }}. Автор: {{ object.author }}</div>
-    <div><a href="{% url "post_list" blog_id=object.id %}">Список постов</a></div>
+    <div><a href="{% url "blogs:post_list" blog_id=object.id %}">Список постов</a></div>
 {% endblock %}
