@@ -16,6 +16,12 @@
     {% if user == object.author %}
         <a href="{% url "blogs:update_blog" object.id %}">Редактирование блога</a><br/>
     {% endif %}
+    <div>
+        Категории:
+        {% for categ in object.category.all %}
+            {{ categ }}
+        {% endfor %}
+    </div>
     <div>Описание блога: {{ object.description }}. </br> Автор: {{ object.author }}</div>
     <div><a href="{% url "blogs:post_list" blog_id=object.id %}">Список постов</a></div>
 {% endblock %}

@@ -8,7 +8,6 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .models import Comment
 
 
-
 class CommentView(DetailView):
     queryset = Comment.objects.all()
     template_name = "comments/comment.html"
@@ -21,13 +20,3 @@ class UpdateComment(UpdateView):
     success_url = reverse_lazy('blogs:blog_list')
 
 
-class CreateComment(CreateView):
-    template_name = 'comments/add_comment.html'
-    model = Comment
-    fields = ('description', 'post',)
-    success_url = reverse_lazy('blogs:blog_list')
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.rate = 0
-        return super(CreateComment, self).form_valid(form)

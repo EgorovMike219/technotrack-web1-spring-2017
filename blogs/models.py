@@ -5,11 +5,12 @@ from django.conf import settings
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, default='Общее')
+    name = models.CharField(max_length=255)
     #overcategory = models.ForeignKey(Category)
 
     def __str__(self):
         return self.name
+
 
 class Blog(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)

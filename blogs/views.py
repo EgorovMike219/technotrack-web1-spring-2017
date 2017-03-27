@@ -5,6 +5,7 @@ from django import forms
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .models import Blog, Post
+from comments.models import Comment
 
 
 class SortForm(forms.Form):
@@ -14,7 +15,7 @@ class SortForm(forms.Form):
             ('title', u'Заголовок'),
             ('description', u'Описание'),
             ('rate', u'Рейтинг'),
-        )
+        ), required=False
     )
     search = forms.CharField(required=False)
 
@@ -31,7 +32,8 @@ class BlogList(ListView):
     def get_queryset(self):
         qs = super(BlogList, self).get_queryset()
         if self.sortform.is_valid():
-            qs = qs.order_by(self.sortform.cleaned_data['sort'])
+            if self.sortform.cleaned_data['sort']:
+                qs = qs.order_by(self.sortform.cleaned_data['sort'])
             if self.sortform.cleaned_data['search']:
                 qs = qs.filter(title__icontains=self.sortform.cleaned_data['search'])
         return qs
@@ -72,7 +74,8 @@ class PostList(ListView):
             raise Http404
         qs = super(PostList, self).get_queryset().filter(blog=blog)
         if self.sortform.is_valid():
-            qs = qs.order_by(self.sortform.cleaned_data['sort'])
+            if self.sortform.cleaned_data['sort']:
+                qs = qs.order_by(self.sortform.cleaned_data['sort'])
             if self.sortform.cleaned_data['search']:
                 qs = qs.filter(title__icontains=self.sortform.cleaned_data['search'])
         return qs
@@ -107,11 +110,24 @@ class CreatePost(CreateView):
         return super(CreatePost, self).form_valid(form)
 
 
+class PostView(CreateView):
+    template_name = 'blogs/post.html'
+    model = Comment
+    fields = ('description',)
+    success_url = reverse_lazy('blogs:blog_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.rate = 0
+        form.instance.post = Post.objects.filter(id=self.kwargs.get('pk')).first()
+        return super(PostView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(PostView, self).get_context_data(**kwargs)
+        context['post'] = Post.objects.filter(id=self.kwargs.get('pk')).first()
+        return context
+
+
 class BlogView(DetailView):
     queryset = Blog.objects.all()
     template_name = "blogs/blog.html"
-
-
-class PostView(DetailView):
-    queryset = Post.objects.all()
-    template_name = "blogs/post.html"
