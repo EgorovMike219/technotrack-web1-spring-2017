@@ -2,14 +2,36 @@
 
 {% block title %} {{ object.title }} {% endblock %}
 
+{% block trace %}
+    <div>
+        <a href="{% url 'core:home' %}">Главная</a>
+        >>
+        <a href="{% url 'blogs:blog_list' %}">Блоги</a>
+        >>
+        <a href="{% url 'blogs:blog' pk=object.blog.id %}">Блог: "{{ object.blog.title }}"</a>
+        >>
+        <a href="{% url 'blogs:post_list' blog_id=object.blog.id %}">Посты</a>
+        >>
+        Пост: "{{ object.title }}"
+    </div>
+{% endblock %}
+
 {% block content %}
+    {% if user == object.author %}
+        <a href="{% url "blogs:update_post" object.id %}">Редактирование блога</a><br/>
+    {% endif %}
     <div>Описание поста:</div>
     <div>{{ object.description }}</div>
-    <div>Автор: {{ object.author }}</div>
+    <div>Автор: {{ object.author }}</div> </br>
+    <div>
+        <a href="{% url "comments:add_comment" %}">Создание комментария</a> </br>
+        </br>
+    </div>
     {% if object.comment_set.all %}
         <div>Комментарии:</div>
     {% endif %}
     {% for comment in object.comment_set.all %}
-        <b>{{ comment.id }}. {{ comment.description }} </b> <br/>
+
+        <b>({{ comment.author }}) <a href="{% url 'comments:comment' pk=comment.id %}">{{ comment.id }}</a>.  {{ comment.description }} </b> <br/>
     {% endfor %}
 {% endblock %}

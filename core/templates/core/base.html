@@ -7,7 +7,29 @@
     </head>
 
     <body>
+        ____________________</br>
+        {% block trace %}
+            <div>
+                <a href="{% url 'core:home' %}">Главная</a>
+            </div>
+        {% endblock %}
+        ____________________</br>
+        {% block account %}
+            <div>
+                {{ user }}
+                {% if user.is_anonymous %}
+                    <a href="{% url "core:login" %}">Login</a>
+                     or
+                    <a href="{% url "core:add_user" %}">Create Account</a>
+                {% else %}
+                    <a href="{% url "core:logout" %}">Logout</a>
+                {% endif %}
+            </div>
+        {% endblock %}
+        ____________________</br>
+
         {% block content %}{% endblock %}
     </body>
 
 </html>
+

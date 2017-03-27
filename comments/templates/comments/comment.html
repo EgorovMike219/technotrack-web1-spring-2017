@@ -2,7 +2,26 @@
 
 {% block title %} Комментарий {% endblock %}
 
+{% block trace %}
+    <div>
+        <a href="{% url 'core:home' %}">Главная</a>
+        >>
+        <a href="{% url 'blogs:blog_list' %}">Блоги</a>
+        >>
+        <a href="{% url 'blogs:blog' pk=comment.post.blog.id %}">Блог: "{{ comment.post.blog.title }}"</a>
+        >>
+        <a href="{% url 'blogs:post_list' blog_id=comment.post.blog.id %}">Посты</a>
+        >>
+        <a href="{% url 'blogs:post' pk=comment.post.id %}">Пост: "{{ comment.post.title }}"</a>
+        >>
+        Комментарий: {{ comment.id }}
+    </div>
+{% endblock %}
+
 {% block content %}
+    {% if user == object.author %}
+        <a href="{% url "comments:update_comment" object.id %}">Редактирование комментария</a><br/>
+    {% endif %}
     <div>Комментарий:</div>
         <div>{{ comment.description }}</div>
 {% endblock %}

@@ -18,9 +18,9 @@ from django.contrib import admin
 from blogs.views import *
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^comment/', include('comments.urls', namespace="comments")),
-    url(r'^blog/', include('blogs.urls', namespace="blogs")),
+    url(r'^admin/', admin.site.urls, name='admin'),
+    url(r'^comments/', include('comments.urls', namespace="comments")),
+    url(r'^blogs/', include('blogs.urls', namespace="blogs")),
     url(r'^core/', include('core.urls', namespace="core")),
     url(r'^', include('core.urls', namespace="core")),
 ]

@@ -2,8 +2,20 @@
 
 {% block title %} {{ object.title }} {% endblock %}
 
+{% block trace %}
+    <div>
+        <a href="{% url 'core:home' %}">Главная</a>
+        >>
+        <a href="{% url 'blogs:blog_list' %}">Блоги</a>
+        >>
+        Блог: "{{ object.title }}"
+    </div>
+{% endblock %}
+
 {% block content %}
-    <a href="{% url "blogs:blog_list"  %}">Blogs</a><br/>
-    <div>Описание блога: {{ object.description }}. Автор: {{ object.author }}</div>
+    {% if user == object.author %}
+        <a href="{% url "blogs:update_blog" object.id %}">Редактирование блога</a><br/>
+    {% endif %}
+    <div>Описание блога: {{ object.description }}. </br> Автор: {{ object.author }}</div>
     <div><a href="{% url "blogs:post_list" blog_id=object.id %}">Список постов</a></div>
 {% endblock %}

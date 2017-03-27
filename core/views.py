@@ -1,13 +1,28 @@
-from django.shortcuts import render
-
-# Create your views here.
+from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from blogs.models import *
 from core.models import *
 from comments.models import *
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
+
+
+class MyUserCreationForm(UserCreationForm):
+    model = get_user_model()
+    fields = ('username', 'password1', 'password2')
+
+
+class CreateUser(CreateView):
+    form_class = MyUserCreationForm
+    template_name = 'core/add_user.html'
+    success_url = reverse_lazy('core:home')
+
+
 def test(request):
     return HttpResponse("dfghjk")
+
 
 class HomePageView(TemplateView):
     template_name = 'core/file.html'

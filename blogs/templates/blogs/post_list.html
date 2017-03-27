@@ -2,7 +2,30 @@
 
 {% block title %}Список постов в блоге {% endblock %}
 
+{% block trace %}
+    <div>
+        <a href="{% url 'core:home' %}">Главная</a>
+        >>
+        <a href="{% url 'blogs:blog_list' %}">Блоги</a>
+        >>
+        <a href="{% url 'blogs:blog' pk=blog.id %}">Блог: "{{ blog.title }}"</a>
+        >>
+        Посты
+    </div>
+{% endblock %}
+
 {% block content %}
+    <div>
+        <form action="{% url "blogs:post_list" blog.id %}" method="get">
+            Сортировать по: {{ sortfrom.sort }} </br>
+            Искать: {{ sortfrom.search }} </br>
+            <input type="submit">
+        </form>
+    </div>
+    <div>
+        <a href="{% url "blogs:add_post" %}">Создание поста</a> </br>
+        </br>
+    </div>
     {% for post in object_list %}
         <b>{{ post.id }}. </b><a href="{% url "blogs:post" pk=post.id %}">{{ post.title }}</a><br/>
     {% endfor %}
