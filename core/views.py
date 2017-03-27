@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from blogs.models import *
@@ -10,12 +10,25 @@ from django.urls import reverse_lazy
 
 
 class MyUserCreationForm(UserCreationForm):
-    model = get_user_model()
-    fields = ('username', 'password1', 'password2')
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password1', 'password2')
+
+
+class MyUserChangeForm(UserChangeForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password')
 
 
 class CreateUser(CreateView):
     form_class = MyUserCreationForm
+    template_name = 'core/add_user.html'
+    success_url = reverse_lazy('core:home')
+
+
+class UpdateUser(UpdateView):
+    form_class = MyUserChangeForm
     template_name = 'core/add_user.html'
     success_url = reverse_lazy('core:home')
 

@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^login/$', login, {'template_name': 'core/login.html'}, name='login'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^users/add/$', CreateUser.as_view(), name='add_user'),
+    url(r'^users/edit/$', login_required(UpdateUser.as_view()), name='update_user'),
 ]
