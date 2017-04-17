@@ -1,28 +1,18 @@
 # coding: utf-8
-
-from django.http import Http404
-from django import forms
+from django.http import HttpResponse
+from django.shortcuts import render_to_response, get_object_or_404
+from django.urls import reverse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from .models import Blog, Post
-from comments.models import Comment
-
-
-class SortForm(forms.Form):
-
-    sort = forms.ChoiceField(
-        choices=(
-            ('title', u'Заголовок'),
-            ('description', u'Описание'),
-            ('rate', u'Рейтинг'),
-        ), required=False
-    )
-    search = forms.CharField(required=False)
+from django.http import Http404
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
+from blogs.forms import SortForm, UpdateBlogForm, CreateBlogForm, UpdatePostForm, CreatePostForm, PostViewForm
+from .models import Blog, Post, Like
+from django.contrib.auth.views import login
 
 
 class BlogList(ListView):
-    template_name = "blogs/blog_list.html"
     model = Blog
+    template_name = "blogs/blog_list.html"
     sortform = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -45,16 +35,15 @@ class BlogList(ListView):
 
 
 class UpdateBlog(UpdateView):
-    template_name = 'blogs/add_blog.html'
     model = Blog
-    fields = ('title', 'description', 'category')
+    form_class = UpdateBlogForm
+    template_name = 'blogs/update_blog.html'
     success_url = reverse_lazy('blogs:blog_list')
 
 
 class CreateBlog(CreateView):
+    form_class = CreateBlogForm
     template_name = 'blogs/add_blog.html'
-    model = Blog
-    fields = ('title', 'description', 'category')
     success_url = reverse_lazy('blogs:blog_list')
 
     def form_valid(self, form):
@@ -92,16 +81,15 @@ class PostList(ListView):
 
 
 class UpdatePost(UpdateView):
-    template_name = 'blogs/add_post.html'
-    model = Blog
-    fields = ('title', 'description')
+    template_name = 'blogs/update_post.html'
+    form_class = UpdatePostForm
+    model = Post
     success_url = reverse_lazy('blogs:blog_list')
 
 
 class CreatePost(CreateView):
+    form_class = CreatePostForm
     template_name = 'blogs/add_post.html'
-    model = Post
-    fields = ('title', 'description', 'blog')
     success_url = reverse_lazy('blogs:blog_list')
 
     def form_valid(self, form):
@@ -111,10 +99,11 @@ class CreatePost(CreateView):
 
 
 class PostView(CreateView):
+    def get_success_url(self):
+        return reverse('blogs:post', args=(self.object.post.id, ))
+
     template_name = 'blogs/post.html'
-    model = Comment
-    fields = ('description',)
-    success_url = reverse_lazy('blogs:blog_list')
+    form_class = PostViewForm
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -131,3 +120,26 @@ class PostView(CreateView):
 class BlogView(DetailView):
     queryset = Blog.objects.all()
     template_name = "blogs/blog.html"
+
+
+class PostLikeAjaxView(View):
+
+    def dispatch(self, request, pk=None, *args, **kwargs):
+        # Забираем из базы пост, который собираются лайкнуть
+        self.post_object = get_object_or_404(Post, id=pk)
+        return super(PostLikeAjaxView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        if not self.post_object.like_set.filter(author=self.request.user).exists():  # нужно ли проверять что пользователь не аноним
+            like = Like()
+            like.author = self.request.user
+            like.place = self.post_object
+            like.save()
+            self.post_object.rate = Like.objects.filter(place=self.post_object).count()
+            blog = Blog.objects.filter(post=self.post_object).first()
+            blog.rate += 1
+            blog.save()
+            self.post_object.save()
+            # Сначала мы проверили, что лайка от этого юзера у поста еще нет
+            # Теперь мы здесь должны создать лайк, и вернуть новое количество лайков у поста
+        return HttpResponse(Like.objects.filter(place=self.post_object).count())

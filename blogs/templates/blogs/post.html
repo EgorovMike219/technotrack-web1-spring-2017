@@ -18,11 +18,11 @@
 
 {% block content %}
     {% if user ==  post.author %}
-        <a href="{% url "blogs:update_post"  post.id %}">Редактирование блога</a><br/>
+        <a href="{% url "blogs:update_post"  post.id %}">Редактирование поста</a><br/>
     {% endif %}
     <div>Описание поста:</div>
     <div>{{  post.description }}</div>
-    <div>Автор: {{  post.author }}</div> </br>
+    <div>Автор: {{  post.author }}</div> <br>
     {% if  post.comment_set.all %}
         <div>Комментарии:</div>
     {% endif %}

@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^posts/add/$', login_required(CreatePost.as_view()), name="add_post"),
     url(r'^post/(?P<pk>\d+)/$', PostView.as_view(), name="post"),
     url(r'^posts/(?P<blog_id>\d+)/$', PostList.as_view(), name="post_list"),
+    url(r'^post/(?P<pk>\d+)/like$', PostLikeAjaxView.as_view(), name="post_ajax_like"),
 ]

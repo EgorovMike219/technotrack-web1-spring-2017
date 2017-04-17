@@ -1,0 +1,11 @@
+.Lobster {
+    color: purple;
+    font-family: 'Lobster';
+}
+
+div.footer {
+    position: relative;
+    text-align:center;
+    width:100%;
+}
+

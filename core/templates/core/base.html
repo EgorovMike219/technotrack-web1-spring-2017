@@ -1,35 +1,83 @@
+{% load static %}
 <html>
+    <meta name="csrf" content="{{ csrf_token }}">
 
     <head>
         <title>
             {% block title %}{% endblock %}
         </title>
+        <link rel="stylesheet" href="{% static "core/bootstrap/dist/css/bootstrap.min.css" %}">
+        <link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="{% static 'core/base.css' %}">
+        {% block extra %}
+
+        {% endblock %}
     </head>
 
     <body>
-        ____________________</br>
-        {% block trace %}
-            <div>
-                <a href="{% url 'core:home' %}">Главная</a>
+        <a href="/"><img src="{% static "core/img/icon.png" %}" alt="Whitesquare logo"></a>
+
+        <h4 class="Lobster">
+            <div class="col-xs-6 ">
+                {% block trace %}
+                    <div>
+                        <a href="{% url 'core:home' %}">Главная</a>
+                    </div>
+                {% endblock %}
             </div>
+                <div>
+                    {% block account %}
+                        <div class="row">
+                            <div class="col-xs-offset-1 col-md-2 ">{{ user }}</div>
+                            {% if user.is_anonymous %}
+                                <!-- Button trigger modal -->
+                                <button type="button" class="col-xs-2 btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                  Login
+                                </button>
+                                <!-- Modal -->
+                                <div class=" modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Login</h4>
+                                      </div>
+                                      <div class="modal-body ajaxlogin" data-url="{% url "core:login" %}">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <a class="col-xs-1" href="{% url "core:add_user" %}">Create Account</a>
+                            {% else %}
+                                <div class="col-xs-2 "><a href="{% url "core:update_user" pk=user.id %}">Настройки</a></div>
+                                <div class="col-xs-1 "><a href="{% url "core:logout" %}">Logout</a></div>
+                            {% endif %}
+                        </div>
+                    {% endblock %}
+                </div>
+        </h4>
+
+        {% block menu-panel %}
+           <ul class="nav nav-tabs">
+              <li role="presentation"><a href="{% url "core:home"  %}">Главная</a></li>
+              <li role="presentation"><a href="{% url "blogs:blog_list"  %}">Блоги</a></li>
+            </ul>
         {% endblock %}
-        ____________________</br>
-        {% block account %}
-            <div>
-                {{ user }}
-                {% if user.is_anonymous %}
-                    <a href="{% url "core:login" %}">Login</a>
-                     or
-                    <a href="{% url "core:add_user" %}">Create Account</a>
-                {% else %}
-                    <a href="{% url "core:update_user" %}">Настройки</a>
-                    <a href="{% url "core:logout" %}">Logout</a>
-                {% endif %}
-            </div>
-        {% endblock %}
-        ____________________</br>
 
         {% block content %}{% endblock %}
+
+        <footer>
+            {% block footer %}
+                <div class="footer">Автор: Егоров Михаил</div>
+            {% endblock %}
+        </footer>
+
+        <script src="{% static "core/jquery/dist/jquery.js" %}"></script>
+        <script src="{% static "core/bootstrap/dist/js/bootstrap.js" %}"></script>
+        <script src="{% static "core/js/base.js" %}"></script>
+        <script src="{% static "core/chosen/chosen.css" %}"></script>
+        <script src="{% static "core/chosen/chosen.jquery.js" %}"></script>
+        <script src="{% static "core/bootstrap-chosen.css" %}"></script>
     </body>
 
 </html>

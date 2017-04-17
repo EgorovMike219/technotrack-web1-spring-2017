@@ -1,4 +1,10 @@
 {% extends "core/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra %}
+    <link rel="stylesheet" href="{% static 'blogs/blogs.css' %}">
+{% endblock %}
 
 {% block title %}Список блогов{% endblock %}
 
@@ -10,19 +16,41 @@
     </div>
 {% endblock %}
 
+
+
 {% block content %}
     <div>
         <form action="{% url "blogs:blog_list" %}" method="get">
-            Сортировать по: {{ sortfrom.sort }} </br>
-            Искать: {{ sortfrom.search }} </br>
-            <input type="submit">
+            <div>Сортировать по: {{ sortfrom.sort}} </div>
+            <div style="clear: left;"></div>
+            <div>{{ sortfrom.search|add_class:"navbar-form navbar-left form-group  form-control"|attr:"placeholder:Search" }} </div>
+            <div><button type="submit" class="btn btn-default">Submit</button></div>
         </form>
+        <div style="clear: both"></div>
+    </div>
+    <div class="row">
+        <h3 class="col-xs-2">Блоги</h3>
+        <a class="col-xs-offset-8 col-xs-2"href="{% url "blogs:add_blog" %}">Создание блога</a> <br>
+        <br>
     </div>
     <div>
-        <a href="{% url "blogs:add_blog" %}">Создание блога</a> </br>
-        </br>
-    </div>
-    {% for blog in object_list %}
-        <b>{{ blog.id }}. </b><a href="{% url "blogs:blog" pk=blog.id %}">{{ blog.title }}</a><br/>
-    {% endfor %}
+        {% for blog in object_list %}
+            <div class="row">
+                <div class="panel panel-info col-xs-offset-1 col-xs-10 ">
+                    <div class="panel-heading">
+                        <span style="box-sizing: border-box; background-color: white;">Рейтинг: {{ blog.rate }}</span>
+                        <a href="{% url "blogs:blog" pk=blog.id %}">{{ blog.title }}</a>
+                        {% if user == blog.author %}
+                            <p class="text-right">
+                                <a href="{% url "blogs:update_blog" blog.id %}">Редактировать</a>
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body">
+                        {{ blog.description }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+     </div>
 {% endblock %}

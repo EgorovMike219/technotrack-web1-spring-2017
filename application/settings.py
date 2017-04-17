@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'uni_form'
+
 
 # Application definition
 
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'blogs.apps.BlogsConfig',
     'comments.apps.CommentsConfig',
+    'widget_tweaks',
+    'crispy_forms',
 ]
 
 AUTH_USER_MODEL = 'core.User'

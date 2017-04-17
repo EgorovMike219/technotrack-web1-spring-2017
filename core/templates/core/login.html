@@ -1,9 +1,5 @@
-{% extends 'core/base.html' %}
-
-{% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit">
-    </form>
-{% endblock %}
+<form method="post" class="ajaxform" data-url="{% url "core:login" %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit", formaction="{% url "core:login" %}">
+</form>

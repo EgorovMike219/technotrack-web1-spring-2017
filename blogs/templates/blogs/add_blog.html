@@ -3,7 +3,9 @@
 {% block content %}
     <form action="{% url "blogs:add_blog" %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div>Title:{{ form.title }}</div>
+        <div>Description:{{ form.description }}</div>
+        <div id="categories">{{ form.category }}</div>
         <input type="submit">
     </form>
 {% endblock %}

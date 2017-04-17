@@ -1,5 +1,12 @@
 {% extends "core/base.html" %}
 
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra %}
+    <link rel="stylesheet" href="{% static 'blogs/blogs.css' %}">
+{% endblock %}
+
 {% block title %} {{ object.title }} {% endblock %}
 
 {% block trace %}
@@ -13,15 +20,20 @@
 {% endblock %}
 
 {% block content %}
-    {% if user == object.author %}
-        <a href="{% url "blogs:update_blog" object.id %}">Редактирование блога</a><br/>
-    {% endif %}
+    <div class="row">
+        <div class="text-center"><h2 class="Lobster">{{ object.title }} </h2></div>
+    </div>
     <div>
         Категории:
         {% for categ in object.category.all %}
             {{ categ }}
         {% endfor %}
     </div>
-    <div>Описание блога: {{ object.description }}. </br> Автор: {{ object.author }}</div>
-    <div><a href="{% url "blogs:post_list" blog_id=object.id %}">Список постов</a></div>
+    <div>
+        Описание блога: {{ object.description }}. <br>
+        Автор: {{ object.author }}
+    </div>
+    <div>
+        <a href="{% url "blogs:post_list" blog_id=object.id %}">Список постов</a>
+    </div>
 {% endblock %}

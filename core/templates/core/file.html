@@ -1,5 +1,7 @@
 {% extends "core/base.html" %}
 
+{% load static %}
+
 {% block title %}
     Главная страница сайта
 {% endblock %}
@@ -10,13 +12,15 @@
     </div>
 {% endblock %}
 
+
 {% block content %}
-    <div style="color: midnightblue; background-color: lightgoldenrodyellow">
-        <div><h1>Приветствую тебя на главной странице сайта </h1></div>
-        <div>Количество пользователей на сайте: {{ users.count }}</div>
-        <div>Количество блогов на сайте: {{ blogs.count }}</div>
-        <div>Количество постов на сайте: {{ posts.count }}</div>
-        <div>Количество комментариев на сайте: {{ comments.count }}</div>
-        <div>Если хочешь посмотреть интерестные блоги, то  <a href="{% url "blogs:blog_list"  %}">ТЫЧЬ ПО ССЫЛКЕ</a></div>
+    <div >
+        <div class="col-xs-8 col-xs-offset-2"><h1 class="Lobster">Приветствую тебя на главной странице сайта </h1></div>
+        <div style="clear: left;"></div>
+        <p>Количество пользователей на сайте: {{ users.count }}</p>
+        <p>Количество блогов на сайте: {{ blogs.count }}</p>
+        <p>Количество постов на сайте: {{ posts.count }}</p>
+        <p>Количество комментариев на сайте: {{ comments.count }}</p>
+        <p>Если хочешь посмотреть интересные блоги, то  <a href="{% url "blogs:blog_list"  %}">ТЫЧЬ ПО ССЫЛКЕ</a></p>
     </div>
 {% endblock %}
