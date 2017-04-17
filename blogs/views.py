@@ -1,13 +1,12 @@
 # coding: utf-8
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.http import Http404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
 from blogs.forms import SortForm, UpdateBlogForm, CreateBlogForm, UpdatePostForm, CreatePostForm, PostViewForm
 from .models import Blog, Post, Like
-from django.contrib.auth.views import login
 
 
 class BlogList(ListView):
@@ -92,8 +91,19 @@ class CreatePost(CreateView):
     template_name = 'blogs/add_post.html'
     success_url = reverse_lazy('blogs:blog_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        self.success_url = reverse('blogs:post_list', args=[self.kwargs.get('blog_id')])
+        return super(CreatePost, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CreatePost, self).get_context_data(**kwargs)
+        context['blog'] = Blog.objects.filter(id=self.kwargs.get('blog_id')).first()
+        return context
+
     def form_valid(self, form):
+        blog = Blog.objects.filter(id=self.kwargs.get('blog_id')).first()
         form.instance.author = self.request.user
+        form.instance.blog = blog
         form.instance.rate = 0
         return super(CreatePost, self).form_valid(form)
 

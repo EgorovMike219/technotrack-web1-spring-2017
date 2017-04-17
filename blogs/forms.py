@@ -36,7 +36,7 @@ class UpdatePostForm(forms.ModelForm):
 class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'description', 'blog',)
+        fields = ('title', 'description', )
 
 
 class PostViewForm(forms.ModelForm):

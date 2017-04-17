@@ -46,6 +46,7 @@ $(document).ready(function() {
                 console.log(data, status, response);
                 if (data == 'ok') {
                     $('button.close')[0].click();
+                    location.reload();
                     // как сменить текущего пользователя на user
                 } else {
                     alert("ошибка");
